@@ -1,6 +1,8 @@
 
 package org.example;
 
+import DataReader.FileIO;
+
 import java.util.ArrayList;
 
 import java.util.Scanner;
@@ -51,14 +53,6 @@ public class Login {
     }
 
 
-        /*for (User user : users) {
-            if (usernameInput.equalsIgnoreCase(user.getUsername()) && passwordInput.equals(user.getPassword())) {
-                ui.displayMsg("You have successfully logged in");
-            }
-            loggedInUser = user;
-            user.setLoggedIn(true); // Set the loggedIn status in User class
-            return;
-        }*/
 
     public void createUser() {
         ui.displayMsg("Please write your desired username!");
@@ -78,9 +72,11 @@ public class Login {
 
         loggedInUser = newUser;
     }
+
     /**
      * The following methods are getters which gets the current user logged in
      * makes the program able to distinguish between admin users and non admin users
+     *
      * @return it returns the inputs written from the login method I.E. username and password
      */
     //Region getters
@@ -88,11 +84,12 @@ public class Login {
         return loggedInUser;
     }
 
-    public String getUsernameInput(){
+    public String getUsernameInput() {
         this.usernameInput = usernameInput;
         return usernameInput;
     }
-    public String getPasswordInput(){
+
+    public String getPasswordInput() {
         this.passwordInput = passwordInput;
         return passwordInput;
     }

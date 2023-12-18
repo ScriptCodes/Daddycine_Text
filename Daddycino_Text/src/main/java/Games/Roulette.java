@@ -1,4 +1,8 @@
-package org.example;
+package Games;
+
+import org.example.Login;
+import org.example.TextUI;
+import org.example.User;
 
 import java.util.Random;
 
@@ -6,7 +10,10 @@ public class Roulette {
 
     TextUI ui = new TextUI();
 
-    Login login = new Login();
+    //Login login = new Login();
+    User user;
+    Login login;
+
 
 
     private double balance;
@@ -14,49 +21,17 @@ public class Roulette {
     public Roulette (Login login){
         this.login = login;
     }
+
     public void runRoulette() {
 
-        User user = login.getLoggedInUser();
-
+        user = login.getLoggedInUser();
         balance = user.getBalance();
-
-
-        ui.displayMsg("Welcome to the Roulette Game!");
-        ui.displayMsg("Balance: $" + balance);
-
-        while (true) {
-            ui.displayMsg("1.Place Bet" + "\n" + "2.Spin the wheel" + "\n" + "3.Exit to main menu");
-
-            int choice = ui.getIntInput("Enter your choice: ");
-
-            switch (choice) {
-                case 1:
-                    placeBet();
-                    break;
-
-                case 2:
-                    spinWheel();
-                    break;
-
-                case 3:
-                    ui.displayMsg("Thanks for playing. Exiting...");
-                    return;
-
-                default:
-                    ui.displayMsg("Invalid choice. Please try again!");
-            }
-
-
-            int replayChoice = ui.getIntInput("Do you want to play again?" + "\n" + "1.Yes" + "\n" + "2.No");
-
-            if (replayChoice != 1) {
-                ui.displayMsg("Thanks for playing. Exiting...");
-                return;
-            }
-        }
     }
 
-    private void placeBet(){
+    public void placeBet(){
+
+        user = login.getLoggedInUser();
+        balance = user.getBalance();
 
         double betAmount = ui.getDoubleInput("Enter your bet amount: $");
 
@@ -71,6 +46,7 @@ public class Roulette {
                 break;
 
             case 2:
+                System.out.println("Choose color (Red/Black)");
                 String chosenColor = ui.getInput("Choose color (Red/Black): ");
                 processColorBet(betAmount, chosenColor);
                 break;
@@ -86,6 +62,10 @@ public class Roulette {
     }
 
     private void processNumberBet(double betAmount, int chosenNumber){
+
+        user = login.getLoggedInUser();
+        balance = user.getBalance();
+
         Random random = new Random();
         int winningNumber = random.nextInt(37);
 
@@ -93,15 +73,19 @@ public class Roulette {
 
         if(chosenNumber == winningNumber){
             double winnings = betAmount * 35;
-            balance += winnings;
+            user.Deposit(winnings);
             ui.displayMsg("Congratulations! You won $" + winnings);
         } else {
-            balance -= betAmount;
+            user.Withdraw(betAmount);
             ui.displayMsg("Sorry, you lost. Better luck next time!");
         }
     }
 
     private void processColorBet(double betAmount, String chosenColor){
+
+        user = login.getLoggedInUser();
+        balance = user.getBalance();
+
         Random random = new Random();
         int winningNumber = random.nextInt(37);
         String winningColor = (winningNumber == 0 || (winningNumber >= 1 && winningNumber <= 10) || (winningNumber >= 19 && winningNumber <= 28)) ? "Red" : "Black";
@@ -110,15 +94,19 @@ public class Roulette {
 
         if (chosenColor.equalsIgnoreCase(winningColor)) {
             double winnings = betAmount * 1.5;
-            balance += winnings;
+            user.Deposit(winnings);
             ui.displayMsg("Congratulations! You won $" + winnings);
         } else {
-            balance -= betAmount;
+            user.Withdraw(betAmount);
             ui.displayMsg("Sorry, you lost. Better luck next time!");
         }
     }
 
     private void processThirdsBet(double betAmount, int chosenThird) {
+
+        user = login.getLoggedInUser();
+        balance = user.getBalance();
+
         Random random = new Random();
         int winningNumber = random.nextInt(37);
 
@@ -129,15 +117,15 @@ public class Roulette {
 
         if (chosenThird == winningThird) {
             double winnings = betAmount * 1.5;
-            balance += winnings;
+            user.Deposit(winnings);
             ui.displayMsg("Congratulations! You won $" + winnings);
         } else {
-            balance -= betAmount;
+            user.Withdraw(betAmount);
             ui.displayMsg("Sorry, you lost. Better luck next time!");
         }
     }
 
-    private void spinWheel() {
+    public void spinWheel() {
         ui.displayMsg("Spinning the wheel...");
     }
 }

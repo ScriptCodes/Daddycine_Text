@@ -1,4 +1,9 @@
-package org.example;
+package Games;
+
+import org.example.Login;
+import org.example.Menu;
+import org.example.TextUI;
+import org.example.User;
 
 import java.util.Random;
 
@@ -17,27 +22,15 @@ public class Coinflip {
 
 
 
-    public void coinflipOptions(){
-    ui.displayMsg("1.Do you want to play coinflip?"+"\n"+"2.Do you want to exit to main menu?");
-        String coinflipoptions = ui.getInput("");
-        switch (coinflipoptions){
-            case "1":
-                runCoinflip();
-                break;
-            case "2":
-                menu.displayUserOptions();
-                break;
-        }
-    }
 
 
     public void runCoinflip(){
         User user = login.getLoggedInUser();
-
         balance = user.getBalance();
         int coin = randomNum.nextInt(2);
+
         ui.displayMsg("You current balance: " + balance);
-        while (balance > 0){
+
             ui.displayMsg("Please enter your desired betting amount");
            double bet = ui.getDoubleInput("");
            ui.displayMsg("Now decide between heads or tails" +"\n" + "0.Heads" + "\n" + "1.Tails" + "\n" + "2.Exit to Menu");
@@ -60,5 +53,5 @@ public class Coinflip {
 
         }
     }
-}
+
 

@@ -1,4 +1,6 @@
-package org.example;
+package DataReader;
+
+import org.example.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,14 +10,14 @@ public class FileIO{
     static ArrayList<User> users = new ArrayList<>();
     User user;
     // database URL
-    static final String DB_URL = "jdbc:mysql://localhost/Accounts";
+    static final String DB_URL = "jdbc:mysql://localhost/casino";
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "";
+    static final String PASS = "!Frik3400Rouvi1312";
 
 
-    public ArrayList<User> readUserData(ArrayList<User> existingUsers) {
+    public ArrayList<User> readUserData(ArrayList<User> users) {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -28,13 +30,13 @@ public class FileIO{
 
             //STEP 3: Execute a query
             System.out.println("Creating statement...");
-            String sql = "SELECT username, password,balance FROM accounts.Accounts";
+            String sql = "SELECT username, password,balance FROM casino.accounts";
             stmt = conn.prepareStatement(sql);
 
             ResultSet rs = stmt.executeQuery(sql);
 
             //STEP 4: Extract data from result set
-            existingUsers.clear();
+            users.clear();
             while (rs.next()) {
                 //Retrieve by column name
 
@@ -44,7 +46,7 @@ public class FileIO{
                 double balance = rs.getDouble("balance");
 
                 User user = new User(name, password, balance);
-                existingUsers.add(user);
+                users.add(user);
 
 
 
@@ -73,8 +75,10 @@ public class FileIO{
                 se.printStackTrace();
             }//end finally try
         }//end try
-        return existingUsers;
+        return users;
     }
+
+
 
     public void saveUserData(ArrayList<User> newUsersList) {
         Connection conn = null;
@@ -84,27 +88,75 @@ public class FileIO{
             // Register JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Open a connectiond
+            // Open a connection
             System.out.println("Connecting to database...");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            //user.createUs
-            // SQL query to insert user data
+
+            // SQL query to update user data
+            String sql = "UPDATE casino.accounts SET password = ?, balance = ? WHERE username = ?";
+            stmt = conn.prepareStatement(sql);
+
             for (User user : newUsersList) {
-                String sql = "INSERT INTO accounts.Accounts (username, password,balance) VALUES (?, ?, ?)";
-                stmt = conn.prepareStatement(sql);
-
-
                 // Set parameters for the SQL query
-                stmt.setString(1, user.getUsername());
-                stmt.setString(2, user.getPassword());
-                stmt.setDouble(3, user.getBalance());
+                stmt.setString(1, user.getPassword());
+                stmt.setDouble(2, user.getBalance());
+                stmt.setString(3, user.getUsername());
 
                 // Execute the update
                 stmt.executeUpdate();
-
-                System.out.println("User data saved to database.");
             }
 
+            System.out.println("User data updated in the database.");
+
+        } catch (SQLException se) {
+            // Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            // Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            // Clean-up environment
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            } // nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
+    public void saveNewUserData(ArrayList<User> newUsersList) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            // Register JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Open a connection
+            System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            // SQL query to update user data
+            String sql = "INSERT INTO casino.accounts (username, password, balance) VALUES (?, ?, ?)";
+            stmt = conn.prepareStatement(sql);
+
+            for (User user : newUsersList) {
+                // Set parameters for the SQL query
+                stmt.setString(2, user.getPassword());
+                stmt.setDouble(3, user.getBalance());
+                stmt.setString(1, user.getUsername());
+
+                // Execute the update
+                stmt.executeUpdate();
+            }
+
+            System.out.println("User data updated in the database.");
 
         } catch (SQLException se) {
             // Handle errors for JDBC

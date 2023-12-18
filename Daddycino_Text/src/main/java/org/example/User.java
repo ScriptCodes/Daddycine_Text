@@ -31,10 +31,10 @@ public class User {
         this.loggedIn = loggedIn;
     }
 
-    public void Deposit(double amount){
+    public void Deposit(double amount) {
 
         if(amount>0){
-            balance += amount;
+            this.balance += amount;
             System.out.println("Money go in bank wowow, new money: "  + balance);
         } else{
             System.out.println("No money go bank nono");
@@ -44,8 +44,8 @@ public class User {
 
     public void Withdraw(double amount){
 
-        if (amount>0 && balance >= amount){
-            balance -= amount;
+        if (amount>0 && this.balance >= amount){
+            this.balance -= amount;
             System.out.println("Money out of bank, you small money gang now  " + balance );
         } else if (amount <= 0) {
             System.out.println("-Money? What? nono you dumb");
@@ -53,7 +53,10 @@ public class User {
             System.out.println("No money go work");
         }
 
+
+
     }
+
 
 
 }

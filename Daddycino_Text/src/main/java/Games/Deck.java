@@ -1,4 +1,6 @@
-package org.example;
+package Games;
+
+import org.example.TextUI;
 
 import java.util.ArrayList;
 import java.util.Collections;
